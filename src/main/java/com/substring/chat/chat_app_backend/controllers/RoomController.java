@@ -7,6 +7,7 @@ import com.substring.chat.chat_app_backend.repositories.RoomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 import java.util.List;
 import com.substring.chat.chat_app_backend.configure.AppConstants;
 
@@ -24,23 +25,22 @@ public class RoomController {
         this.roomRepository = roomRepository;
     }
 
+        @PostMapping
+        public ResponseEntity<?> createRoom(@RequestBody Room roomRequest) {
 
+            String roomId = roomRequest.getRoomId();
 
-    // create room
-    @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody String roomId) {
+            if (roomRepository.findByRoomId(roomId) != null) {
+                return ResponseEntity.badRequest().body("Room already exists!");
+            }
 
-        if (roomRepository.findByRoomId(roomId) != null) {
-            return ResponseEntity.badRequest().body("Room already exists!");
+            Room room = new Room();
+            room.setRoomId(roomId);
+
+            Room savedRoom = roomRepository.save(room);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedRoom);
         }
 
-        Room room = new Room();
-        room.setRoomId(roomId);
-
-        Room savedRoom = roomRepository.save(room);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedRoom);
-    }
 
     // join room
     @GetMapping("/{roomId}")
