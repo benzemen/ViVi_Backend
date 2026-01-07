@@ -14,7 +14,8 @@ import com.substring.chat.chat_app_backend.configure.AppConstants;
 
 @RestController
 @RequestMapping("/api/v1/rooms")
-@CrossOrigin(AppConstants.FRONT_END_BASE_URL)
+@CrossOrigin(origins = "*")
+
 public class RoomController {
 
     private final RoomRepository roomRepository;
