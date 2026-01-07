@@ -17,7 +17,7 @@ import com.substring.chat.chat_app_backend.configure.AppConstants;
 import java.time.LocalDateTime;
 
 @Controller
-@CrossOrigin(origins = "*")
+
 
 public class ChatController {
 

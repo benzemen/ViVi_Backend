@@ -14,7 +14,6 @@ import com.substring.chat.chat_app_backend.configure.AppConstants;
 
 @RestController
 @RequestMapping("/api/v1/rooms")
-@CrossOrigin(origins = "*")
 
 public class RoomController {
 
@@ -26,7 +25,7 @@ public class RoomController {
         this.roomRepository = roomRepository;
     }
 
-        @PostMapping
+    @PostMapping(consumes = "application/json")
         public ResponseEntity<?> createRoom(@RequestBody Room roomRequest) {
 
             String roomId = roomRequest.getRoomId();
@@ -41,6 +40,7 @@ public class RoomController {
             Room savedRoom = roomRepository.save(room);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedRoom);
         }
+
 
 
     // join room
