@@ -17,7 +17,7 @@ Backend APIs to power the ViVi platform — handles routing, data logic, and com
 This repository contains the **server-side logic** for the ViVi platform.  
 It provides RESTful API endpoints that the frontend application consumes to perform actions like fetching data, authenticating users, posting thoughts, and more.
 
-The backend is deployed on **Render**, where it automatically rebuilds on push to the main branch. :contentReference[oaicite:1]{index=1}
+The backend is deployed on **Render**, where it automatically rebuilds on push to the main branch.
 
 ---
 
