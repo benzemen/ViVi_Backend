@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
  * @see Room
  */
 @Document(collection = "messages")
+@org.springframework.data.mongodb.core.index.CompoundIndex(name = "room_time_idx", def = "{'roomId': 1, 'timeStamp': -1}")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,11 +37,9 @@ public class Message {
     private String content;
 
     /** Foreign key linking this message to a {@link Room}. Indexed for fast lookups. */
-    @Indexed
     private String roomId;
 
     /** Timestamp when the message was created. Indexed for chronological queries. */
-    @Indexed
     private LocalDateTime timeStamp;
 
     /** List of usernames who have chosen to hide (delete for me) this message. */

@@ -22,7 +22,7 @@ public class AiModerationService implements ModerationService {
     @Value("${app.moderation.api-url:https://api.groq.com/openai/v1/chat/completions}")
     private String apiUrl;
 
-    @Value("${app.moderation.model:llama-3.1-8b-instant}")
+    @Value("${app.moderation.model:llama3-8b-8192}")
     private String model;
 
     private final RestTemplate restTemplate = new RestTemplate();

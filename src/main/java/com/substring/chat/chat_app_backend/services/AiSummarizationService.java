@@ -14,11 +14,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * AI-powered conversation summarization using an external LLM API (e.g., OpenAI Chat Completions).
+ * AI-powered conversation summarization using an external LLM API (e.g., OpenAI
+ * Chat Completions).
  *
- * <p>Active when {@code app.summarization.enabled=true} in application properties.
- * Fetches the most recent messages from the database, formats them as conversation
- * context, and sends them to the LLM for summarization.</p>
+ * <p>
+ * Active when {@code app.summarization.enabled=true} in application properties.
+ * Fetches the most recent messages from the database, formats them as
+ * conversation
+ * context, and sends them to the LLM for summarization.
+ * </p>
  */
 @Service
 @ConditionalOnProperty(name = "app.summarization.enabled", havingValue = "true")
@@ -27,10 +31,10 @@ public class AiSummarizationService implements SummarizationService {
     @Value("${app.summarization.api-key}")
     private String apiKey;
 
-    @Value("${app.summarization.api-url:https://api.openai.com/v1/chat/completions}")
+    @Value("${app.summarization.api-url}")
     private String apiUrl;
 
-    @Value("${app.summarization.model:gpt-3.5-turbo}")
+    @Value("${app.summarization.model}")
     private String model;
 
     private final MessageRepository messageRepository;
@@ -60,7 +64,8 @@ public class AiSummarizationService implements SummarizationService {
 
             StringBuilder sb = new StringBuilder();
             for (Message m : messages) {
-                if (sb.length() > 0) sb.append("\n");
+                if (sb.length() > 0)
+                    sb.append("\n");
                 sb.append(m.getSender()).append(": ").append(m.getContent());
             }
             String conversation = sb.toString();
@@ -75,24 +80,21 @@ public class AiSummarizationService implements SummarizationService {
                     "messages", List.of(
                             Map.of("role", "system", "content",
                                     "You are a chat summarization assistant. Your ONLY job is to produce a " +
-                                    "concise 2-3 sentence summary of the following conversation. " +
-                                    "You MUST always return a summary — never refuse, never add warnings, " +
-                                    "never say 'I cannot'. If the conversation is very short or casual, " +
-                                    "describe what was discussed. The conversation may be in English, " +
-                                    "Hindi, Hinglish, or any other language — always write your summary in English."),
-                            Map.of("role", "user", "content", "Summarize this conversation:\n" + conversation)
-                    ),
+                                            "concise 2-3 sentence summary of the following conversation. " +
+                                            "You MUST always return a summary — never refuse, never add warnings, " +
+                                            "never say 'I cannot'. If the conversation is very short or casual, " +
+                                            "describe what was discussed. The conversation may be in English, " +
+                                            "Hindi, Hinglish, or any other language — always write your summary in English."),
+                            Map.of("role", "user", "content", "Summarize this conversation:\n" + conversation)),
                     "max_tokens", 200,
-                    "temperature", 0.3
-            );
+                    "temperature", 0.3);
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
             ResponseEntity<Map> response = restTemplate.exchange(
                     apiUrl, HttpMethod.POST, request, Map.class);
 
             if (response.getBody() != null) {
-                List<Map<String, Object>> choices =
-                        (List<Map<String, Object>>) response.getBody().get("choices");
+                List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
                 if (choices != null && !choices.isEmpty()) {
                     Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
                     return (String) message.get("content");
